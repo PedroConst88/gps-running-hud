@@ -4,10 +4,6 @@ const timeElement = document.getElementById("time");
 const paceElement = document.getElementById("pace");
 const statusElement = document.getElementById("status");
 
-const startButton = document.getElementById("start");
-const stopButton = document.getElementById("stop");
-const resetButton = document.getElementById("reset");
-
 let watchId = null;
 let startTime = null;
 let elapsedSeconds = 0;
@@ -17,6 +13,8 @@ let timerId = null;
 
 let map = null;
 let marker = null;
+let pathLine = null;
+let pathPoints = [];
 
 function initMap() {
   if (typeof L === "undefined" || !document.getElementById("map")) {
@@ -34,7 +32,7 @@ function initMap() {
   }).addTo(map);
 }
 
-const FOLLOW_ZOOM = 18;
+const FOLLOW_ZOOM = 16;
 
 function updateMap(latitude, longitude) {
   if (!map) {
@@ -42,6 +40,18 @@ function updateMap(latitude, longitude) {
   }
 
   const latLng = [latitude, longitude];
+  pathPoints.push(latLng);
+
+  if (!pathLine) {
+    pathLine = L.polyline(pathPoints, {
+      color: "#4facfe",
+      weight: 4,
+      opacity: 0.85,
+      lineJoin: "round"
+    }).addTo(map);
+  } else {
+    pathLine.setLatLngs(pathPoints);
+  }
 
   if (!marker) {
     const gpsIcon = L.divIcon({
@@ -58,6 +68,14 @@ function updateMap(latitude, longitude) {
       animate: true,
       duration: 0.5
     });
+  }
+}
+
+function resetMap() {
+  pathPoints = [];
+
+  if (pathLine) {
+    pathLine.setLatLngs([]);
   }
 }
 
@@ -209,14 +227,15 @@ function resetRun() {
   elapsedSeconds = 0;
   totalDistance = 0;
   lastPosition = null;
+  resetMap();
 
   updateDisplay();
   statusElement.textContent = "Pronto para começar";
 }
 
-startButton.addEventListener("click", startRun);
-stopButton.addEventListener("click", stopRun);
-resetButton.addEventListener("click", resetRun);
-
 updateDisplay();
 initMap();
+
+// Auto-start ao carregar: permite usar esta página como Web Source no PRISM
+// Live Studio (ou noutro OBS-like), onde não é possível clicar num botão.
+startRun();

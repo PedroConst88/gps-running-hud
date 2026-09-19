@@ -16,14 +16,16 @@
 <body>
 
   <main class="hud">
-    <div class="brand">PEDRO IRL</div>
-
-    <div class="distance">
-      <span id="distance">0.00</span>
-      <small>KM</small>
+    <div class="map-container">
+      <div id="map"></div>
     </div>
 
     <div class="stats">
+      <div>
+        <span class="label">DISTÂNCIA</span>
+        <strong><span id="distance">0.00</span> KM</strong>
+      </div>
+
       <div>
         <span class="label">TEMPO</span>
         <strong id="time">00:00:00</strong>
@@ -35,18 +37,8 @@
       </div>
     </div>
 
-    <div class="map-container">
-      <div id="map"></div>
-    </div>
-
     <div class="status" id="status">
       Pronto para começar
-    </div>
-
-    <div class="buttons">
-      <button id="start">Iniciar</button>
-      <button id="stop">Parar</button>
-      <button id="reset">Reset</button>
     </div>
   </main>
 

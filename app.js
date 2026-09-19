@@ -179,6 +179,12 @@ function startRun() {
     return;
   }
 
+  if (!window.isSecureContext) {
+    statusElement.textContent =
+      "GPS requer HTTPS (origem não é segura)";
+    return;
+  }
+
   if (watchId !== null) {
     return;
   }
